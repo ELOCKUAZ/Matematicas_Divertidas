@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Matemáticas Divertidas v5.5</title>
+    <!-- Icono preconfigurado integrado por Data URI -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <style>
+        :root {
+            --theme-primary: #0984e3;
+            --theme-secondary: #74b9ff;
+            --btn-bg-1: #0984e3;
+            --btn-bg-2: #74b9ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            max-height: 96vh;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .header-title-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 2px;
+            padding: 0 36px;
+        }
+
+        h1 {
+            color: var(--theme-primary);
+            font-size: 1.3rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        .info-btn, .back-btn {
+            background-color: var(--theme-primary);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .back-btn { position: absolute; left: 0; }
+        .info-btn { position: absolute; right: 0; }
+
+        .subtitle {
+            color: #636e72;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            color: #2d3436;
+            margin: 6px 0 3px 0;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        /* Menú Principal de Operaciones */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 6px 0;
+        }
+
+        .menu-card-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 8px 10px;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: transform 0.1s;
+            background: linear-gradient(135deg, var(--btn-bg-1), var(--btn-bg-2));
+        }
+
+        .menu-card-btn:active { transform: scale(0.98); }
+
+        .menu-icon-box {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+        }
+
+        .menu-text-box {
+            background: rgba(0, 0, 0, 0.22);
+            padding: 6px 10px;
+            border-radius: 10px;
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: left;
+            backdrop-filter: blur(2px);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .menu-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .menu-sub {
+            font-size: 0.7rem;
+            opacity: 0.95;
+            font-weight: 500;
+            line-height: 1.15;
+            color: #f1f2f6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+
+        /* Configuración Pantalla 2 Header */
+        .config-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 2px;
+            padding: 0 36px;
+        }
+
+        .config-title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .config-symbol-box {
+            background: rgba(0, 0, 0, 0.08);
+            border: 1.5px solid var(--theme-secondary);
+            border-radius: 10px;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        .config-title-box {
+            background: rgba(0, 0, 0, 0.06);
+            border: 1.5px solid var(--theme-secondary);
+            border-radius: 10px;
+            padding: 6px 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        #config-title {
+            color: var(--theme-primary);
+            font-size: 1.15rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .config-subtitle {
+            color: #636e72;
+            font-size: 0.82rem;
+            margin-bottom: 4px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .config-divider {
+            border: 0;
+            border-top: 1px solid #dfe6e9;
+            margin: 6px 0 8px 0;
+        }
+
+        /* Grilla de Tablas (1 al 20) */
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        .table-btn, .level-btn {
+            background-color: #f1f2f6;
+            border: 1.5px solid #b2bec3;
+            border-radius: 7px;
+            padding: 7px 2px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #2d3436;
+            transition: all 0.1s;
+            text-align: center;
+        }
+
+        .table-btn.selected, .level-btn.selected {
+            background-color: var(--theme-primary);
+            color: white;
+            border-color: var(--theme-secondary);
+        }
+
+        .group-actions {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .group-actions button {
+            flex: 1;
+            padding: 5px;
+            border-radius: 7px;
+            border: none;
+            background-color: var(--theme-primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Opciones en Grilla */
+        .options-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+
+        .options-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .options-grid-3-col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .time-btn, .q-btn, .ans-type-btn, .dir-btn, .carry-btn {
+            background-color: #f1f2f6;
+            border: 1.5px solid #b2bec3;
+            border-radius: 7px;
+            padding: 5px 2px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #2d3436;
+            text-align: center;
+        }
+
+        .time-btn.selected, .q-btn.selected, .ans-type-btn.selected, .dir-btn.selected, .carry-btn.selected {
+            background-color: var(--theme-primary);
+            color: white;
+            border-color: var(--theme-secondary);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Banner Superior del Juego */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2c3e50;
+            padding: 8px 12px;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            margin-bottom: 4px;
+        }
+
+        .header-badge {
+            background-color: #ffffff;
+            color: #2d3436;
+            padding: 5px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .badges-row {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .active-tables-badge {
+            background-color: #ffeaa7;
+            color: #d35400;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .direction-info-badge {
+            background-color: #e3f2fd;
+            color: #0984e3;
+            border: 1px solid #74b9ff;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Cuadrícula de Operación Vertical por Columnas (Cuaderno) */
+        .math-box-container {
+            display: flex;
+            justify-content: center;
+            margin: 4px 0;
+        }
+
+        .math-column-grid {
+            display: inline-flex;
+            flex-direction: column;
+            font-family: monospace, sans-serif;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #2f3640;
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 10px 16px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+            border: 2.5px dashed var(--theme-secondary);
+        }
+
+        .math-grid-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .math-col {
+            width: 40px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .carry-digit-box {
+            width: 36px;
+            height: 32px;
+            background: #fff8e7;
+            border: 2px dashed #f39c12;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #d35400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .carry-digit-box.active-box {
+            border: 2.5px solid #e67e22;
+            background-color: #ffeaa7;
+            box-shadow: 0 0 8px rgba(230, 126, 34, 0.4);
+        }
+
+        .math-digit-box {
+            width: 36px;
+            height: 42px;
+            background: #ffffff;
+            border: 2px dashed #b2bec3;
+            border-radius: 6px;
+            font-size: 2rem;
+            font-family: monospace;
+            font-weight: bold;
+            color: #2d3436;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .math-digit-box.active-box {
+            border: 2.5px solid var(--theme-primary);
+            background-color: #e3f2fd;
+            box-shadow: 0 0 8px rgba(9, 132, 227, 0.3);
+        }
+
+        /* Cursor Bloque Parpadeante */
+        @keyframes blinkBlockCursor {
+            0%, 100% { opacity: 1; background-color: var(--theme-primary); color: #ffffff; }
+            50% { opacity: 0.2; background-color: transparent; color: var(--theme-primary); }
+        }
+
+        .blinking-caret {
+            display: inline-block;
+            font-weight: bold;
+            padding: 0 2px;
+            margin-left: 1px;
+            border-radius: 3px;
+            animation: blinkBlockCursor 0.9s infinite;
+        }
+
+        /* Opciones de respuesta */
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .choice-btn {
+            background-color: #f1f2f6;
+            border: 2px solid var(--theme-secondary);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2f3640;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+
+        .choice-btn.selected-choice {
+            background-color: var(--theme-primary) !important;
+            color: white !important;
+        }
+
+        /* Teclado Numérico Compacto */
+        .numeric-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            max-width: 280px;
+            margin: 0 auto 8px auto;
+        }
+
+        .num-key {
+            background-color: #f1f2f6;
+            border: 1.5px solid #ced6e0;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #2f3640;
+        }
+
+        .key-del { background-color: #ff7675; color: white; border-color: #d63031; }
+        .key-ok { background-color: #55efc4; color: #2d3436; border-color: #00b894; }
+
+        .finish-test-btn {
+            background-color: #ff7675;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.95rem;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        /* Pop-up Expresivo y Modales */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 100;
+            justify-content: center;
+            align-items: flex-end; 
+            padding-bottom: 50px;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .popup-card {
+            width: 100%;
+            max-width: 360px;
+            border-radius: 20px;
+            padding: 20px 16px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+            animation: popUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .popup-card.correct { background: linear-gradient(135deg, rgba(0,184,148,0.95), rgba(0,206,201,0.95)); }
+        .popup-card.incorrect { background: linear-gradient(135deg, rgba(255,118,117,0.95), rgba(214,48,49,0.95)); }
+
+        .popup-emoji-box {
+            background-color: #ffffff;
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            margin-bottom: 6px;
+        }
+
+        .popup-emoji { font-size: 2.4rem; line-height: 1; }
+        .popup-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 6px; }
+        .popup-desc { font-size: 0.95rem; margin-bottom: 12px; line-height: 1.4; text-align: left; }
+
+        .correct-answer-highlight {
+            display: block;
+            margin-top: 6px;
+            background-color: #ffeaa7;
+            color: #d35400;
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px dashed #e67e22;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .popup-next-btn {
+            background-color: white;
+            color: #2d3436;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 100%;
+        }
+
+        /* Pantalla de Resultados */
+        .result-trophy { font-size: 2.8rem; margin-bottom: 2px; text-align: center; }
+        .score-display { font-size: 2.2rem; font-weight: bold; color: #00b894; margin: 2px 0; text-align: center; }
+
+        .stats-card {
+            background-color: #f8f9fa;
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin: 6px 0;
+            font-size: 0.85rem;
+            color: #2d3436;
+            line-height: 1.4;
+            text-align: left;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .action-buttons { display: flex; gap: 8px; }
+        .action-buttons button {
+            flex: 1; padding: 10px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; font-size: 0.95rem;
+        }
+        .btn-retry { background-color: var(--theme-primary); color: white; }
+        .btn-config { background-color: #636e72; color: white; }
+
+        .version-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #b2bec3;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        @keyframes popUp { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Pantalla 0: Menú Principal de Selección de Operación -->
+    <div id="main-menu-screen" class="screen active">
+        <div class="header-title-flex">
+            <h1>🚀 Matemáticas Divertidas</h1>
+            <button class="info-btn" onclick="openInfoModal()" title="Información">ℹ️</button>
+        </div>
+        <p class="subtitle">Elige qué operación o juego deseas practicar:</p>
+
+        <div class="menu-grid">
+            <button class="menu-card-btn" style="--btn-bg-1:#00b894; --btn-bg-2:#55efc4;" onclick="selectMode('suma')">
+                <div class="menu-icon-box">➕</div>
+                <div class="menu-text-box">
+                    <div class="menu-title">Suma</div>
+                    <div class="menu-sub">Práctica de suma por nivel de cantidad de dígitos</div>
+                </div>
+            </button>
+
+            <button class="menu-card-btn" style="--btn-bg-1:#e74c3c; --btn-bg-2:#ff7675;" onclick="selectMode('resta')">
+                <div class="menu-icon-box">➖</div>
+                <div class="menu-text-box">
+                    <div class="menu-title">Resta</div>
+                    <div class="menu-sub">Práctica de resta por nivel de cantidad de dígitos</div>
+                </div>
+            </button>
+
+            <button class="menu-card-btn" style="--btn-bg-1:#0984e3; --btn-bg-2:#74b9ff;" onclick="selectMode('multiplicacion')">
+                <div class="menu-icon-box">✖️</div>
+                <div class="menu-text-box">
+                    <div class="menu-title">Multiplicación</div>
+                    <div class="menu-sub">Práctica de multiplicación por nivel de cantidad de dígitos</div>
+                </div>
+            </button>
+
+            <button class="menu-card-btn" style="--btn-bg-1:#6c5ce7; --btn-bg-2:#a29bfe;" onclick="selectMode('division')">
+                <div class="menu-icon-box">➗</div>
+                <div class="menu-text-box">
+                    <div class="menu-title">División</div>
+                    <div class="menu-sub">Práctica de división por nivel de cantidad de dígitos</div>
+                </div>
+            </button>
+
+            <button class="menu-card-btn" style="--btn-bg-1:#e1b12c; --btn-bg-2:#fbc531;" onclick="selectMode('tables')">
+                <div class="menu-icon-box" style="background: rgba(0,0,0,0.15); color: #fff;">⭐</div>
+                <div class="menu-text-box" style="background: rgba(0,0,0,0.18);">
+                    <div class="menu-title">Tablas de Multiplicar</div>
+                    <div class="menu-sub">Práctica clásica de tablas (1 al 20)</div>
+                </div>
+            </button>
+        </div>
+
+        <div class="version-footer">Matemáticas Divertidas v5.5</div>
+    </div>
+
+    <!-- Pantalla 1: Configuración Adaptativa -->
+    <div id="config-screen" class="screen">
+        <div class="config-header-container">
+            <button class="back-btn" onclick="showScreen('main-menu-screen')">⬅️</button>
+            <div class="config-title-group">
+                <div class="config-symbol-box" id="config-symbol">➕</div>
+                <div class="config-title-box">
+                    <h2 id="config-title">Suma</h2>
+                </div>
+            </div>
+            <button class="info-btn" onclick="openInfoModal()" title="Información">ℹ️</button>
+        </div>
+        <p class="config-subtitle" id="config-subtitle">Nivel por cantidad de dígitos</p>
+        <hr class="config-divider">
+
+        <!-- Contenedor Dinámico -->
+        <div id="dynamic-selector-container">
+            <div id="tables-section">
+                <div class="section-title">Selecciona Tablas (1 al 20):</div>
+                <div class="group-actions">
+                    <button onclick="selectAllTables(true)">Todas</button>
+                    <button onclick="selectAllTables(false)">Ninguna</button>
+                </div>
+                <div class="tables-grid" id="tables-grid"></div>
+            </div>
+
+            <div id="levels-section" style="display:none;">
+                <div class="section-title" id="level-title-label">Selecciona el Nivel de Dificultad:</div>
+                <div class="options-grid-5" id="levels-grid" style="display: grid; gap: 6px;"></div>
+            </div>
+        </div>
+
+        <div class="section-title">Límite de Tiempo:</div>
+        <div class="options-grid-4" id="time-options">
+            <button class="time-btn selected" data-time="0">Ilimitado ♾️</button>
+            <button class="time-btn" data-time="30">30 seg</button>
+            <button class="time-btn" data-time="60">1 min</button>
+            <button class="time-btn" data-time="120">2 min</button>
+        </div>
+
+        <div class="section-title">Cantidad de Preguntas:</div>
+        <div class="options-grid-3" id="q-options">
+            <button class="q-btn selected" data-q="0">Ilimitado ♾️</button>
+            <button class="q-btn" data-q="5">5 preg</button>
+            <button class="q-btn" data-q="10">10 preg</button>
+            <button class="q-btn" data-q="15">15 preg</button>
+            <button class="q-btn" data-q="20">20 preg</button>
+            <button class="q-btn" data-q="30">30 preg</button>
+        </div>
+
+        <div class="section-title">Tipo de Respuesta:</div>
+        <div class="options-grid-3" id="ans-type-options">
+            <button class="ans-type-btn selected" data-type="3choices">3 Opciones</button>
+            <button class="ans-type-btn" data-type="5choices">5 Opciones</button>
+            <button class="ans-type-btn" data-type="keypad">Teclado</button>
+        </div>
+
+        <!-- Opción de Casilla de Reserva -->
+        <div class="section-title">Casilla de Reserva arriba (Canje / Llevada):</div>
+        <div class="options-grid-2" id="carry-options">
+            <button class="carry-btn selected" data-carry="yes">✏️ Con Reserva</button>
+            <button class="carry-btn" data-carry="no">🚫 Sin Reserva</button>
+        </div>
+
+        <!-- Opción de Modo de Ingreso por Teclado -->
+        <div id="container-direction-setting" style="display:none;">
+            <div class="section-title">Modo de Ingreso con Teclado:</div>
+            <div class="options-grid-3-col" id="dir-options">
+                <button class="dir-btn selected" data-dir="rtl">← Der. a Izq.</button>
+                <button class="dir-btn" data-dir="ltr">→ Izq. a Der.</button>
+                <button class="dir-btn" data-dir="boxes">📒 Casillas</button>
+            </div>
+        </div>
+
+        <button class="start-btn" onclick="startTest()">¡INICIAR PRUEBA! 🎯</button>
+        <div class="version-footer">Matemáticas Divertidas v5.5</div>
+    </div>
+
+    <!-- Pantalla 2: Juego -->
+    <div id="game-screen" class="screen">
+        <div class="game-header">
+            <div class="header-badge">
+                <span>📝</span> <span id="lbl-question-count">Pregunta 1</span>
+            </div>
+            <div class="header-badge">
+                <span>⏱️</span> <span id="lbl-timer">00:00</span>
+            </div>
+        </div>
+
+        <!-- Distintivos informativos -->
+        <div class="badges-row">
+            <div class="active-tables-badge" id="lbl-active-mode">Modo: Tablas</div>
+            <div class="direction-info-badge" id="lbl-dir-badge"><span>←</span> Teclado: Der. a Izq.</div>
+        </div>
+
+        <!-- Cuadrícula de Operación Vertical (Cuaderno) -->
+        <div class="math-box-container" id="math-display-area"></div>
+
+        <!-- Modo Teclado Numérico -->
+        <div id="container-keypad" style="display:none;">
+            <div class="numeric-keypad" style="margin-top: 10px;">
+                <button class="num-key" onclick="pressNum('1')">1</button>
+                <button class="num-key" onclick="pressNum('2')">2</button>
+                <button class="num-key" onclick="pressNum('3')">3</button>
+                <button class="num-key" onclick="pressNum('4')">4</button>
+                <button class="num-key" onclick="pressNum('5')">5</button>
+                <button class="num-key" onclick="pressNum('6')">6</button>
+                <button class="num-key" onclick="pressNum('7')">7</button>
+                <button class="num-key" onclick="pressNum('8')">8</button>
+                <button class="num-key" onclick="pressNum('9')">9</button>
+                <button class="num-key key-del" onclick="pressClear()">⌫</button>
+                <button class="num-key" onclick="pressNum('0')">0</button>
+                <button class="num-key key-ok" onclick="submitKeypadAnswer()">✓</button>
+            </div>
+        </div>
+
+        <!-- Modo Opciones (3 o 5) -->
+        <div id="container-choices" class="choices-container"></div>
+
+        <button class="finish-test-btn" onclick="confirmEndTest()">Finalizar Examen 🏁</button>
+        <div class="version-footer" style="margin-top: 4px;">v5.5</div>
+    </div>
+
+    <!-- Pop-up Expresivo Traslúcido -->
+    <div class="popup-overlay" id="feedback-popup">
+        <div class="popup-card" id="popup-card">
+            <div class="popup-emoji-box">
+                <div class="popup-emoji" id="popup-emoji">🎉</div>
+            </div>
+            <div class="popup-title" id="popup-title">¡Excelente!</div>
+            <div class="popup-desc" id="popup-desc" style="text-align: center;">¡Respuesta Correcta!</div>
+            <button class="popup-next-btn" onclick="closePopupAndNext()">Continuar ➔</button>
+        </div>
+    </div>
+
+    <!-- Modal de Información -->
+    <div class="popup-overlay" id="info-popup" style="align-items: center; padding-bottom: 20px;">
+        <div class="popup-card" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">
+            <div class="popup-emoji-box">
+                <div class="popup-emoji">ℹ️</div>
+            </div>
+            <div class="popup-title">Acerca de la App v5.5</div>
+            <div class="popup-desc">
+                🔹 <b>Novedades v5.5:</b> Cuadrícula de casillas columna por columna para reservas y resultados. En modo derecha a izquierda, el cursor parpadeante avanza automáticamente casilla por casilla hacia la izquierda como en un cuaderno.<br><br>
+                🛡️ <b>Privacidad y Seguridad:</b> Esta aplicación es <b>100% Offline</b>.
+            </div>
+            <button class="popup-next-btn" onclick="closeInfoModal()" style="margin-top: 6px;">Entendido 👍</button>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación para Salir -->
+    <div class="popup-overlay" id="confirm-popup" style="align-items: center; padding-bottom: 20px;">
+        <div class="popup-card" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">
+            <div class="popup-emoji-box">
+                <div class="popup-emoji">🤔</div>
+            </div>
+            <div class="popup-title">¿Finalizar Examen?</div>
+            <div class="popup-desc" style="text-align: center;">¿Estás seguro de que quieres terminar la prueba ahora?</div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="popup-next-btn" style="background-color: #ff7675; color: white;" onclick="acceptEndTest()">Sí, terminar</button>
+                <button class="popup-next-btn" style="background-color: #00b894; color: white;" onclick="closeConfirmModal()">Seguir jugando</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla 3: Resultados -->
+    <div id="result-screen" class="screen">
+        <div class="result-trophy" id="res-trophy">🏆</div>
+        <h1>¡Prueba Finalizada!</h1>
+        <p class="subtitle" id="res-message">¡Buen trabajo practicando!</p>
+
+        <div class="score-display" id="res-score">9.5 / 10</div>
+
+        <div class="stats-card">
+            <p><strong>Modo:</strong> <span id="stat-mode">Tablas</span></p>
+            <p><strong>Detalle:</strong> <span id="stat-detail">Todas</span></p>
+            <p><strong>Límite de Tiempo:</strong> <span id="stat-timelimit">Ilimitado</span></p>
+            <p><strong>Preguntas:</strong> <span id="stat-qlimit">Ilimitado</span></p>
+            <p><strong>Tipo de Respuesta:</strong> <span id="stat-anstype">3 Opciones</span></p>
+            <hr style="margin: 6px 0; border: 0; border-top: 1px solid #dfe6e9;">
+            <p><strong>Respondidas:</strong> <span id="stat-total">0</span></p>
+            <p><strong>Correctas:</strong> <span id="stat-correct">0</span> 🟢</p>
+            <p><strong>Incorrectas:</strong> <span id="stat-incorrect">0</span> 🔴</p>
+            <p><strong>Tiempo Demorado:</strong> <span id="stat-time">00:00</span></p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-retry" onclick="startTest()">Repetir</button>
+            <button class="btn-config" onclick="showScreen('main-menu-screen')">Menú Principal</button>
+        </div>
+        <div class="version-footer">Matemáticas Divertidas v5.5</div>
+    </div>
+</div>
+
+<script>
+    let currentMode = 'tables';
+    let selectedLevel = 1;
+    let selectedTables = [];
+    let timeLimit = 0;
+    let maxQuestions = 0;
+    let answerType = '3choices';
+    let keypadDirection = 'rtl';
+    let showCarryBox = true;
+
+    let currentQuestionNum = 0;
+    let correctCount = 0;
+    let incorrectCount = 0;
+    let timerInterval = null;
+    let secondsElapsed = 0;
+    let secondsRemaining = 0;
+    
+    let currentNum1 = 0;
+    let currentNum2 = 0;
+    let currentOpSymbol = '+';
+    let currentCorrectAnswer = 0;
+    let currentChoices = [];
+    let popupTimeout = null;
+
+    // Estado para Cuadrícula por Columnas
+    let maxCols = 1;
+    let answerBoxValues = [];
+    let carryBoxValues = [];
+    let activeTarget = { type: 'answer', index: 0 }; // { type: 'answer' | 'carry', index: number }
+
+    let audioCtx = null;
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function playSound(type) {
+        try {
+            initAudio();
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            let now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(500, now);
+                gain.gain.setValueAtTime(0.04, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                osc.start(now);
+                osc.stop(now + 0.04);
+            } else if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(554.37, now + 0.08);
+                osc.frequency.setValueAtTime(659.25, now + 0.16);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+                osc.start(now);
+                osc.stop(now + 0.28);
+            } else if (type === 'incorrect') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.setValueAtTime(130, now + 0.12);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+        } catch(e) {}
+    }
+
+    function playCelebrationSound() {
+        try {
+            initAudio();
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, index) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                let startTime = now + (index * 0.12);
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, startTime);
+                
+                gain.gain.setValueAtTime(0.1, startTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+                
+                osc.start(startTime);
+                osc.stop(startTime + 0.35);
+            });
+        } catch(e) {}
+    }
+
+    const themes = {
+        suma: { primary: '#00b894', secondary: '#55efc4' },
+        resta: { primary: '#e74c3c', secondary: '#ff7675' },
+        multiplicacion: { primary: '#0984e3', secondary: '#74b9ff' },
+        division: { primary: '#6c5ce7', secondary: '#a29bfe' },
+        tables: { primary: '#d35400', secondary: '#fbc531' }
+    };
+
+    function setTheme(mode) {
+        const theme = themes[mode] || themes.tables;
+        document.documentElement.style.setProperty('--theme-primary', theme.primary);
+        document.documentElement.style.setProperty('--theme-secondary', theme.secondary);
+    }
+
+    const tablesGrid = document.getElementById('tables-grid');
+    for (let i = 1; i <= 20; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'table-btn selected';
+        btn.innerText = 'x' + i;
+        btn.dataset.table = i;
+        btn.onclick = () => { playSound('click'); btn.classList.toggle('selected'); };
+        tablesGrid.appendChild(btn);
+    }
+
+    setupSelector('time-options', 'time-btn', (val) => { timeLimit = parseInt(val); });
+    setupSelector('q-options', 'q-btn', (val) => { maxQuestions = parseInt(val); });
+    setupSelector('ans-type-options', 'ans-type-btn', (val) => { 
+        answerType = val; 
+        updateDirectionSettingVisibility();
+    });
+    setupSelector('dir-options', 'dir-btn', (val) => { keypadDirection = val; });
+    setupSelector('carry-options', 'carry-btn', (val) => { showCarryBox = (val === 'yes'); });
+
+    function updateDirectionSettingVisibility() {
+        const dirSetting = document.getElementById('container-direction-setting');
+        if (answerType === 'keypad') {
+            if (currentMode === 'tables' || selectedLevel >= 2) {
+                dirSetting.style.display = 'block';
+            } else {
+                dirSetting.style.display = 'none';
+                keypadDirection = 'ltr';
+            }
+        } else {
+            dirSetting.style.display = 'none';
+        }
+    }
+
+    function setupSelector(containerId, btnClass, callback) {
+        const container = document.getElementById(containerId);
+        container.querySelectorAll('.' + btnClass).forEach(btn => {
+            btn.onclick = () => {
+                playSound('click');
+                container.querySelectorAll('.' + btnClass).forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                let val = btn.dataset.time || btn.dataset.q || btn.dataset.type || btn.dataset.dir || btn.dataset.carry;
+                callback(val);
+            };
+        });
+    }
+
+    function selectAllTables(select) {
+        playSound('click');
+        document.querySelectorAll('.table-btn').forEach(btn => {
+            if (select) btn.classList.add('selected');
+            else btn.classList.remove('selected');
+        });
+    }
+
+    function selectMode(mode) {
+        playSound('click');
+        currentMode = mode;
+        setTheme(mode);
+
+        const tablesSec = document.getElementById('tables-section');
+        const levelsSec = document.getElementById('levels-section');
+        const levelsGrid = document.getElementById('levels-grid');
+        const configTitle = document.getElementById('config-title');
+        const configSymbol = document.getElementById('config-symbol');
+        const configSub = document.getElementById('config-subtitle');
+
+        levelsGrid.innerHTML = '';
+
+        const modeData = {
+            suma: { title: 'Suma', symbol: '➕' },
+            resta: { title: 'Resta', symbol: '➖' },
+            multiplicacion: { title: 'Multiplicación', symbol: '✖️' },
+            division: { title: 'División', symbol: '➗' },
+            tables: { title: 'Tablas de Multiplicar', symbol: '⭐' }
+        };
+
+        configTitle.innerText = modeData[mode].title;
+        configSymbol.innerText = modeData[mode].symbol;
+
+        if (mode === 'tables') {
+            configSub.innerText = 'Práctica clásica de tablas (1 al 20)';
+            tablesSec.style.display = 'block';
+            levelsSec.style.display = 'none';
+        } else {
+            tablesSec.style.display = 'none';
+            levelsSec.style.display = 'block';
+
+            let maxLevel = (mode === 'suma' || mode === 'resta') ? 5 : 3;
+            configSub.innerText = 'Nivel por cantidad de dígitos';
+
+            levelsGrid.style.gridTemplateColumns = `repeat(${maxLevel}, 1fr)`;
+
+            for (let i = 1; i <= maxLevel; i++) {
+                const btn = document.createElement('button');
+                btn.className = `level-btn ${i === 1 ? 'selected' : ''}`;
+                btn.innerText = `Nivel 0${i}`;
+                btn.onclick = () => {
+                    playSound('click');
+                    levelsGrid.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedLevel = i;
+                    
+                    if (i === 1) {
+                        keypadDirection = 'ltr';
+                    } else {
+                        keypadDirection = 'rtl';
+                    }
+                    updateDirectionSettingVisibility();
+                };
+                levelsGrid.appendChild(btn);
+            }
+            selectedLevel = 1;
+            keypadDirection = 'ltr';
+        }
+
+        updateDirectionSettingVisibility();
+        showScreen('config-screen');
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function openInfoModal() { playSound('click'); document.getElementById('info-popup').style.display = 'flex'; }
+    function closeInfoModal() { playSound('click'); document.getElementById('info-popup').style.display = 'none'; }
+
+    function startTest() {
+        playSound('click');
+        initAudio();
+
+        if (currentMode === 'tables') {
+            selectedTables = [];
+            document.querySelectorAll('.table-btn.selected').forEach(btn => {
+                selectedTables.push(parseInt(btn.dataset.table));
+            });
+            if (selectedTables.length === 0) {
+                alert('⚠️ ¡Debes seleccionar al menos una tabla de multiplicar para iniciar!');
+                return;
+            }
+        }
+
+        currentQuestionNum = 0;
+        correctCount = 0;
+        incorrectCount = 0;
+        secondsElapsed = 0;
+        secondsRemaining = timeLimit;
+
+        showScreen('game-screen');
+        
+        if (answerType === 'keypad') {
+            document.getElementById('container-keypad').style.display = 'block';
+            document.getElementById('container-choices').style.display = 'none';
+        } else {
+            document.getElementById('container-keypad').style.display = 'none';
+            document.getElementById('container-choices').style.display = 'flex';
+        }
+
+        let modeLabels = {
+            suma: `Suma - Nivel 0${selectedLevel}`,
+            resta: `Resta - Nivel 0${selectedLevel}`,
+            multiplicacion: `Multiplicación - Nivel 0${selectedLevel}`,
+            division: `División - Nivel 0${selectedLevel}`,
+            tables: selectedTables.length === 20 ? 'Tablas: Todas (x1 a x20)' : 'Tablas: ' + selectedTables.map(t => 'x'+t).join(', ')
+        };
+        document.getElementById('lbl-active-mode').innerText = modeLabels[currentMode];
+
+        const dirBadge = document.getElementById('lbl-dir-badge');
+        if (answerType === 'keypad' && (currentMode === 'tables' || selectedLevel >= 2)) {
+            dirBadge.style.display = 'inline-flex';
+            if (keypadDirection === 'rtl') {
+                dirBadge.innerHTML = '<span>←</span> Teclado: Der. a Izq.';
+            } else if (keypadDirection === 'ltr') {
+                dirBadge.innerHTML = '<span>→</span> Teclado: Izq. a Der.';
+            } else {
+                dirBadge.innerHTML = '<span>📒</span> Modo Casillas';
+            }
+        } else {
+            dirBadge.style.display = 'none';
+        }
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(updateTimer, 1000);
+
+        nextQuestion();
+    }
+
+    function updateTimer() {
+        if (timeLimit > 0) {
+            secondsRemaining--;
+            let mins = Math.floor(secondsRemaining / 60);
+            let secs = secondsRemaining % 60;
+            document.getElementById('lbl-timer').innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+            if (secondsRemaining <= 0) {
+                clearInterval(timerInterval);
+                endTest();
+            }
+        } else {
+            secondsElapsed++;
+            let mins = Math.floor(secondsElapsed / 60);
+            let secs = secondsElapsed % 60;
+            document.getElementById('lbl-timer').innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')} ♾️`;
+        }
+    }
+
+    function generateNumbersForMode() {
+        let min1 = 1, max1 = 9, min2 = 1, max2 = 9;
+
+        if (currentMode === 'tables') {
+            let tIndex = Math.floor(Math.random() * selectedTables.length);
+            currentNum1 = selectedTables[tIndex];
+            currentNum2 = Math.floor(Math.random() * 10) + 1;
+            currentOpSymbol = '×';
+            currentCorrectAnswer = currentNum1 * currentNum2;
+            return;
+        }
+
+        if (currentMode === 'suma') {
+            currentOpSymbol = '+';
+            if (selectedLevel === 1) { min1 = 1; max1 = 9; min2 = 1; max2 = 9; }
+            else if (selectedLevel === 2) { min1 = 10; max1 = 99; min2 = 10; max2 = 99; }
+            else if (selectedLevel === 3) { min1 = 100; max1 = 999; min2 = 100; max2 = 999; }
+            else if (selectedLevel === 4) { min1 = 1000; max1 = 9999; min2 = 1000; max2 = 9999; }
+            else if (selectedLevel === 5) { min1 = 10000; max1 = 99999; min2 = 10000; max2 = 99999; }
+            currentNum1 = Math.floor(Math.random() * (max1 - min1 + 1)) + min1;
+            currentNum2 = Math.floor(Math.random() * (max2 - min2 + 1)) + min2;
+            currentCorrectAnswer = currentNum1 + currentNum2;
+        } 
+        else if (currentMode === 'resta') {
+            currentOpSymbol = '-';
+            if (selectedLevel === 1) { min1 = 1; max1 = 9; min2 = 1; max2 = 9; }
+            else if (selectedLevel === 2) { min1 = 10; max1 = 99; min2 = 10; max2 = 99; }
+            else if (selectedLevel === 3) { min1 = 100; max1 = 999; min2 = 100; max2 = 999; }
+            else if (selectedLevel === 4) { min1 = 1000; max1 = 9999; min2 = 1000; max2 = 9999; }
+            else if (selectedLevel === 5) { min1 = 10000; max1 = 99999; min2 = 10000; max2 = 99999; }
+            currentNum1 = Math.floor(Math.random() * (max1 - min1 + 1)) + min1;
+            currentNum2 = Math.floor(Math.random() * (max2 - min2 + 1)) + min2;
+            if (currentNum1 < currentNum2) {
+                let temp = currentNum1; currentNum1 = currentNum2; currentNum2 = temp;
+            }
+            currentCorrectAnswer = currentNum1 - currentNum2;
+        }
+        else if (currentMode === 'multiplicacion') {
+            currentOpSymbol = '×';
+            if (selectedLevel === 1) { currentNum1 = Math.floor(Math.random() * 9) + 1; currentNum2 = Math.floor(Math.random() * 9) + 1; }
+            else if (selectedLevel === 2) { currentNum1 = Math.floor(Math.random() * 90) + 10; currentNum2 = Math.floor(Math.random() * 9) + 1; }
+            else if (selectedLevel === 3) { currentNum1 = Math.floor(Math.random() * 900) + 100; currentNum2 = Math.floor(Math.random() * 9) + 1; }
+            currentCorrectAnswer = currentNum1 * currentNum2;
+        }
+        else if (currentMode === 'division') {
+            currentOpSymbol = '÷';
+            if (selectedLevel === 1) { currentNum2 = Math.floor(Math.random() * 8) + 2; let quotient = Math.floor(Math.random() * 9) + 1; currentNum1 = currentNum2 * quotient; }
+            else if (selectedLevel === 2) { currentNum2 = Math.floor(Math.random() * 8) + 2; let quotient = Math.floor(Math.random() * 90) + 10; currentNum1 = currentNum2 * quotient; }
+            else if (selectedLevel === 3) { currentNum2 = Math.floor(Math.random() * 9) + 2; let quotient = Math.floor(Math.random() * 900) + 100; currentNum1 = currentNum2 * quotient; }
+            currentCorrectAnswer = currentNum1 / currentNum2;
+        }
+    }
+
+    function setActiveTarget(type, index) {
+        playSound('click');
+        activeTarget = { type: type, index: index };
+        renderMathGrid();
+    }
+
+    function nextQuestion() {
+        currentQuestionNum++;
+
+        if (maxQuestions > 0) {
+            document.getElementById('lbl-question-count').innerText = `${currentQuestionNum} / ${maxQuestions}`;
+            if (currentQuestionNum > maxQuestions) {
+                endTest();
+                return;
+            }
+        } else {
+            document.getElementById('lbl-question-count').innerText = `${currentQuestionNum} (♾️)`;
+        }
+
+        generateNumbersForMode();
+
+        // Determinar max columnas para la cuadrícula
+        maxCols = Math.max(
+            currentNum1.toString().length,
+            currentNum2.toString().length,
+            currentCorrectAnswer.toString().length
+        );
+        if (currentMode === 'tables') maxCols = 2;
+
+        answerBoxValues = new Array(maxCols).fill('');
+        carryBoxValues = new Array(maxCols).fill('');
+
+        // En modo Der. a Izq. (rtl), el cursor empieza en la unidad (última columna)
+        let startCol = (keypadDirection === 'rtl' && currentMode !== 'tables') ? (maxCols - 1) : (keypadDirection === 'ltr' ? 0 : (maxCols - 1));
+        activeTarget = { type: 'answer', index: startCol };
+
+        renderMathGrid();
+
+        if (answerType !== 'keypad') {
+            generateChoices(answerType === '5choices' ? 5 : 3);
+        }
+    }
+
+    function renderMathGrid() {
+        const displayArea = document.getElementById('math-display-area');
+
+        if (currentMode === 'tables') {
+            let ansBoxesHtml = '';
+            for (let i = 0; i < maxCols; i++) {
+                let isActive = (activeTarget.type === 'answer' && activeTarget.index === i);
+                let val = answerBoxValues[i];
+                let displayVal = val === '' ? (isActive ? '<span class="blinking-caret">_</span>' : '&nbsp;') : (val + (isActive ? '<span class="blinking-caret">_</span>' : ''));
+                ansBoxesHtml += `<span class="math-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('answer', ${i})">${displayVal}</span>`;
+            }
+            displayArea.innerHTML = `
+                <div class="vertical-math-box" style="text-align: center; padding: 16px; background:#f8f9fa; border-radius:16px; border:2.5px dashed var(--theme-secondary);">
+                    <div style="font-size: 2rem; margin-bottom: 10px; color:#2f3640;">${currentNum1} × ${currentNum2} =</div>
+                    <div style="display: inline-flex; gap: 4px;">${ansBoxesHtml}</div>
+                </div>
+            `;
+            return;
+        }
+
+        let num1Str = currentNum1.toString().padStart(maxCols, ' ');
+        let num2Str = currentNum2.toString().padStart(maxCols, ' ');
+        let opColIndex = maxCols - currentNum2.toString().length - 1;
+
+        // Fila de Reserva (Carry)
+        let carryRowHtml = '';
+        for (let i = 0; i < maxCols; i++) {
+            let isActive = (activeTarget.type === 'carry' && activeTarget.index === i);
+            let val = carryBoxValues[i];
+            let showBox = showCarryBox && (currentMode === 'tables' || selectedLevel >= 2);
+            let content = '';
+            if (showBox) {
+                let displayVal = val === '' ? (isActive ? '<span class="blinking-caret" style="font-size:0.9rem">_</span>' : '&nbsp;') : (val + (isActive ? '<span class="blinking-caret" style="font-size:0.9rem">_</span>' : ''));
+                content = `<div class="carry-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('carry', ${i})">${displayVal}</div>`;
+            }
+            carryRowHtml += `<div class="math-col">${content}</div>`;
+        }
+
+        // Fila Num 1
+        let num1RowHtml = '';
+        for (let i = 0; i < maxCols; i++) {
+            let char = num1Str[i] === ' ' ? '&nbsp;' : num1Str[i];
+            num1RowHtml += `<div class="math-col">${char}</div>`;
+        }
+
+        // Fila Num 2 y Operador
+        let num2RowHtml = '';
+        for (let i = 0; i < maxCols; i++) {
+            let char = '';
+            if (i === opColIndex) {
+                char = currentOpSymbol;
+            } else {
+                char = num2Str[i] === ' ' ? '&nbsp;' : num2Str[i];
+            }
+            num2RowHtml += `<div class="math-col">${char}</div>`;
+        }
+
+        // Fila de Resultado con Cuadrícula
+        let answerRowHtml = '';
+        for (let i = 0; i < maxCols; i++) {
+            let isActive = (activeTarget.type === 'answer' && activeTarget.index === i);
+            let val = answerBoxValues[i];
+            let displayVal = val === '' ? (isActive ? '<span class="blinking-caret">_</span>' : '&nbsp;') : (val + (isActive ? '<span class="blinking-caret">_</span>' : ''));
+            answerRowHtml += `<div class="math-col"><span class="math-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('answer', ${i})">${displayVal}</span></div>`;
+        }
+
+        displayArea.innerHTML = `
+            <div class="math-column-grid">
+                <div class="math-grid-row">${carryRowHtml}</div>
+                <div class="math-grid-row">${num1RowHtml}</div>
+                <div class="math-grid-row">${num2RowHtml}</div>
+                <div style="border-bottom: 3.5px solid #2f3640; margin: 4px 0; width: 100%;"></div>
+                <div class="math-grid-row">${answerRowHtml}</div>
+            </div>
+        `;
+    }
+
+    function generateChoices(numChoices) {
+        currentChoices = [currentCorrectAnswer];
+        let correctLastDigit = currentCorrectAnswer % 10;
+        let attempts = 0;
+        let sameDigitCountNeeded = numChoices === 5 ? 2 : 1; 
+
+        while (currentChoices.filter(val => val % 10 === correctLastDigit).length <= sameDigitCountNeeded && attempts < 100) {
+            attempts++;
+            let step = (Math.floor(Math.random() * 4) + 1) * 10;
+            let fake = Math.random() < 0.5 ? (currentCorrectAnswer + step) : (currentCorrectAnswer - step);
+            
+            if (fake >= 0 && !currentChoices.includes(fake)) {
+                currentChoices.push(fake);
+            }
+        }
+
+        attempts = 0;
+        while (currentChoices.length < numChoices && attempts < 200) {
+            attempts++;
+            let offsetRange = Math.max(5, Math.floor(currentCorrectAnswer * 0.25));
+            let offset = (Math.floor(Math.random() * offsetRange) + 1) * (Math.random() < 0.5 ? 1 : -1);
+            let fake = currentCorrectAnswer + offset;
+            if (fake >= 0 && !currentChoices.includes(fake)) {
+                currentChoices.push(fake);
+            }
+        }
+
+        currentChoices.sort(() => Math.random() - 0.5);
+
+        const container = document.getElementById('container-choices');
+        container.innerHTML = '';
+        currentChoices.forEach((val) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = val;
+            btn.onclick = () => {
+                playSound('click');
+                document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected-choice'));
+                btn.classList.add('selected-choice');
+                evaluateAnswer(val === currentCorrectAnswer);
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function pressNum(num) {
+        playSound('click');
+        if (activeTarget.type === 'carry') {
+            carryBoxValues[activeTarget.index] = num;
+            renderMathGrid();
+            return;
+        }
+
+        if (activeTarget.type === 'answer') {
+            answerBoxValues[activeTarget.index] = num;
+
+            // En modo Der. a Izq. (rtl), al escribir se mueve automáticamente hacia la izquierda
+            if (keypadDirection === 'rtl' && currentMode !== 'tables') {
+                if (activeTarget.index > 0) {
+                    activeTarget.index--;
+                }
+            } else if (keypadDirection === 'ltr') {
+                if (activeTarget.index < maxCols - 1) {
+                    activeTarget.index++;
+                }
+            }
+            renderMathGrid();
+        }
+    }
+
+    function pressClear() { 
+        playSound('click');
+        if (activeTarget.type === 'carry') {
+            carryBoxValues[activeTarget.index] = '';
+        } else if (activeTarget.type === 'answer') {
+            answerBoxValues[activeTarget.index] = '';
+        }
+        renderMathGrid();
+    }
+
+    function submitKeypadAnswer() {
+        playSound('click');
+        let combined = answerBoxValues.join('');
+        if (combined === '') return;
+        let userVal = parseInt(combined);
+        if (isNaN(userVal)) return;
+        evaluateAnswer(userVal === currentCorrectAnswer);
+    }
+
+    function confirmEndTest() { playSound('click'); document.getElementById('confirm-popup').style.display = 'flex'; }
+    function closeConfirmModal() { playSound('click'); document.getElementById('confirm-popup').style.display = 'none'; }
+    function acceptEndTest() { playSound('click'); closeConfirmModal(); endTest(); }
+
+    function evaluateAnswer(isCorrect) {
+        const popup = document.getElementById('feedback-popup');
+        const card = document.getElementById('popup-card');
+        const emoji = document.getElementById('popup-emoji');
+        const title = document.getElementById('popup-title');
+        const desc = document.getElementById('popup-desc');
+
+        if (isCorrect) {
+            playSound('correct');
+            correctCount++;
+            card.className = 'popup-card correct';
+            emoji.innerText = '🎉 🌟 🏆';
+            title.innerText = '¡Excelente!';
+            desc.innerHTML = '¡Respuesta Correcta!';
+        } else {
+            playSound('incorrect');
+            incorrectCount++;
+            card.className = 'popup-card incorrect';
+            emoji.innerText = '💡 💪 🚫';
+            title.innerText = '¡Casi casi!';
+            let operationText = currentMode === 'tables' ? `${currentNum1} × ${currentNum2}` : `${currentNum1} ${currentOpSymbol} ${currentNum2}`;
+            desc.innerHTML = `La respuesta correcta era: <span class="correct-answer-highlight">${operationText} = ${currentCorrectAnswer}</span>`;
+        }
+
+        popup.style.display = 'flex';
+
+        clearTimeout(popupTimeout);
+        popupTimeout = setTimeout(() => {
+            closePopupAndNext();
+        }, 8000);
+    }
+
+    function closePopupAndNext() {
+        clearTimeout(popupTimeout);
+        document.getElementById('feedback-popup').style.display = 'none';
+
+        if (maxQuestions > 0 && currentQuestionNum >= maxQuestions) {
+            endTest();
+        } else {
+            nextQuestion();
+        }
+    }
+
+    function endTest() {
+        playSound('click');
+        clearInterval(timerInterval);
+        playCelebrationSound();
+        showScreen('result-screen');
+
+        let totalAnswered = correctCount + incorrectCount;
+        let score = totalAnswered > 0 ? (correctCount / totalAnswered) * 10 : 0;
+
+        document.getElementById('res-score').innerText = score.toFixed(1) + ' / 10';
+        document.getElementById('stat-total').innerText = totalAnswered;
+        document.getElementById('stat-correct').innerText = correctCount;
+        document.getElementById('stat-incorrect').innerText = incorrectCount;
+        
+        let modeNames = { suma: 'Suma', resta: 'Resta', multiplicacion: 'Multiplicación', division: 'División', tables: 'Tablas de Multiplicar' };
+        document.getElementById('stat-mode').innerText = modeNames[currentMode];
+
+        let detailText = currentMode === 'tables' ? (selectedTables.length === 20 ? 'Todas (x1 a x20)' : selectedTables.map(t => 'x'+t).join(', ')) : `Nivel 0${selectedLevel}`;
+        document.getElementById('stat-detail').innerText = detailText;
+
+        let timeLimitText = timeLimit === 0 ? 'Ilimitado ♾️' : (timeLimit < 60 ? (timeLimit + ' seg') : (timeLimit/60 + ' min'));
+        document.getElementById('stat-timelimit').innerText = timeLimitText;
+
+        let qLimitText = maxQuestions === 0 ? 'Ilimitado ♾️' : (maxQuestions + ' preguntas');
+        document.getElementById('stat-qlimit').innerText = qLimitText;
+
+        let ansTypeText = answerType === '3choices' ? '3 Opciones' : (answerType === '5choices' ? '5 Opciones' : 'Teclado Numérico');
+        document.getElementById('stat-anstype').innerText = ansTypeText;
+
+        let finalTimeSecs = timeLimit > 0 ? (timeLimit - secondsRemaining) : secondsElapsed;
+        let mins = Math.floor(finalTimeSecs / 60);
+        let secs = finalTimeSecs % 60;
+        document.getElementById('stat-time').innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+
+        let trophy = '🏆';
+        let msg = '¡Fantástico trabajo practicando!';
+        if (score >= 9) { trophy = '👑'; msg = '¡Increíble! ¡Eres un genio de las matemáticas!'; }
+        else if (score >= 7) { trophy = '🌟'; msg = '¡Muy bien hecho! Sigue practicando.'; }
+        else if (score >= 5) { trophy = '🏅'; msg = '¡Buen esfuerzo! La práctica hace al maestro.'; }
+        else { trophy = '💪'; msg = '¡No te rindas! Inténtalo de nuevo.'; }
+
+        document.getElementById('res-trophy').innerText = trophy;
+        document.getElementById('res-message').innerText = msg;
+    }
+</script>
+
+</body>
+</html>

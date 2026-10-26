@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Matemáticas Divertidas v5.5</title>
+    <title>Matemáticas Divertidas v5.9</title>
     <!-- Icono preconfigurado integrado por Data URI -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
     <style>
@@ -183,7 +183,7 @@
             white-space: normal;
         }
 
-        /* Configuración Pantalla 2 Header */
+        /* Configuración Pantalla Header */
         .config-header-container {
             display: flex;
             justify-content: space-between;
@@ -369,6 +369,7 @@
         .badges-row {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 6px;
             margin-bottom: 6px;
             flex-wrap: wrap;
@@ -397,7 +398,22 @@
             gap: 4px;
         }
 
-        /* Cuadrícula de Operación Vertical por Columnas (Cuaderno) */
+        .help-btn-badge {
+            background-color: #fdcb6e;
+            color: #d35400;
+            border: 1px solid #e67e22;
+            padding: 3px 10px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Cuadrícula de Operación Vertical / Horizontal */
         .math-box-container {
             display: flex;
             justify-content: center;
@@ -425,7 +441,7 @@
         }
 
         .math-col {
-            width: 40px;
+            width: 42px;
             height: 44px;
             display: flex;
             align-items: center;
@@ -456,7 +472,7 @@
         }
 
         .math-digit-box {
-            width: 36px;
+            width: 38px;
             height: 42px;
             background: #ffffff;
             border: 2px dashed #b2bec3;
@@ -478,19 +494,25 @@
             box-shadow: 0 0 8px rgba(9, 132, 227, 0.3);
         }
 
-        /* Cursor Bloque Parpadeante */
-        @keyframes blinkBlockCursor {
-            0%, 100% { opacity: 1; background-color: var(--theme-primary); color: #ffffff; }
-            50% { opacity: 0.2; background-color: transparent; color: var(--theme-primary); }
+        /* EFECTOS DE PARPADEO */
+        @keyframes blinkEmptyCaret {
+            0%, 100% { opacity: 1; color: var(--theme-primary); }
+            50% { opacity: 0.15; color: transparent; }
         }
 
-        .blinking-caret {
-            display: inline-block;
+        @keyframes blinkNumberContent {
+            0%, 100% { opacity: 1; color: var(--theme-primary); transform: scale(1.05); }
+            50% { opacity: 0.3; color: #74b9ff; transform: scale(0.95); }
+        }
+
+        .blinking-empty {
+            animation: blinkEmptyCaret 0.85s infinite;
             font-weight: bold;
-            padding: 0 2px;
-            margin-left: 1px;
-            border-radius: 3px;
-            animation: blinkBlockCursor 0.9s infinite;
+        }
+
+        .blinking-number {
+            animation: blinkNumberContent 0.85s infinite;
+            font-weight: bold;
         }
 
         /* Opciones de respuesta */
@@ -572,13 +594,15 @@
 
         .popup-card {
             width: 100%;
-            max-width: 360px;
+            max-width: 380px;
             border-radius: 20px;
             padding: 20px 16px;
             text-align: center;
             color: white;
             box-shadow: 0 12px 30px rgba(0,0,0,0.4);
             animation: popUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .popup-card.correct { background: linear-gradient(135deg, rgba(0,184,148,0.95), rgba(0,206,201,0.95)); }
@@ -710,7 +734,7 @@
             </button>
         </div>
 
-        <div class="version-footer">Matemáticas Divertidas v5.5</div>
+        <div class="version-footer">Matemáticas Divertidas v5.9</div>
     </div>
 
     <!-- Pantalla 1: Configuración Adaptativa -->
@@ -770,14 +794,16 @@
             <button class="ans-type-btn" data-type="keypad">Teclado</button>
         </div>
 
-        <!-- Opción de Casilla de Reserva -->
-        <div class="section-title">Casilla de Reserva arriba (Canje / Llevada):</div>
-        <div class="options-grid-2" id="carry-options">
-            <button class="carry-btn selected" data-carry="yes">✏️ Con Reserva</button>
-            <button class="carry-btn" data-carry="no">🚫 Sin Reserva</button>
+        <!-- Opción de Casilla de Reserva (Oculta para Tablas) -->
+        <div id="container-carry-setting">
+            <div class="section-title">Casilla de Reserva arriba (Canje / Llevada):</div>
+            <div class="options-grid-2" id="carry-options">
+                <button class="carry-btn selected" data-carry="yes">✏️ Con Reserva</button>
+                <button class="carry-btn" data-carry="no">🚫 Sin Reserva</button>
+            </div>
         </div>
 
-        <!-- Opción de Modo de Ingreso por Teclado -->
+        <!-- Opción de Modo de Ingreso por Teclado (Oculta para Tablas) -->
         <div id="container-direction-setting" style="display:none;">
             <div class="section-title">Modo de Ingreso con Teclado:</div>
             <div class="options-grid-3-col" id="dir-options">
@@ -788,7 +814,7 @@
         </div>
 
         <button class="start-btn" onclick="startTest()">¡INICIAR PRUEBA! 🎯</button>
-        <div class="version-footer">Matemáticas Divertidas v5.5</div>
+        <div class="version-footer">Matemáticas Divertidas v5.9</div>
     </div>
 
     <!-- Pantalla 2: Juego -->
@@ -802,13 +828,14 @@
             </div>
         </div>
 
-        <!-- Distintivos informativos -->
+        <!-- Distintivos informativos y Botón de Ayuda -->
         <div class="badges-row">
             <div class="active-tables-badge" id="lbl-active-mode">Modo: Tablas</div>
             <div class="direction-info-badge" id="lbl-dir-badge"><span>←</span> Teclado: Der. a Izq.</div>
+            <button class="help-btn-badge" onclick="openExerciseHelpModal()">💡 ¿Cómo resolver?</button>
         </div>
 
-        <!-- Cuadrícula de Operación Vertical (Cuaderno) -->
+        <!-- Cuadrícula de Operación Vertical / Horizontal -->
         <div class="math-box-container" id="math-display-area"></div>
 
         <!-- Modo Teclado Numérico -->
@@ -833,7 +860,7 @@
         <div id="container-choices" class="choices-container"></div>
 
         <button class="finish-test-btn" onclick="confirmEndTest()">Finalizar Examen 🏁</button>
-        <div class="version-footer" style="margin-top: 4px;">v5.5</div>
+        <div class="version-footer" style="margin-top: 4px;">v5.9</div>
     </div>
 
     <!-- Pop-up Expresivo Traslúcido -->
@@ -848,18 +875,49 @@
         </div>
     </div>
 
-    <!-- Modal de Información -->
+    <!-- Modal Manual de Uso (Información) -->
     <div class="popup-overlay" id="info-popup" style="align-items: center; padding-bottom: 20px;">
-        <div class="popup-card" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">
-            <div class="popup-emoji-box">
-                <div class="popup-emoji">ℹ️</div>
+        <div class="popup-card" style="background: linear-gradient(135deg, #0984e3, #74b9ff); text-align: left;">
+            <div style="text-align: center;">
+                <div class="popup-emoji-box">
+                    <div class="popup-emoji">📘</div>
+                </div>
+                <div class="popup-title">Manual de Usuario</div>
             </div>
-            <div class="popup-title">Acerca de la App v5.5</div>
-            <div class="popup-desc">
-                🔹 <b>Novedades v5.5:</b> Cuadrícula de casillas columna por columna para reservas y resultados. En modo derecha a izquierda, el cursor parpadeante avanza automáticamente casilla por casilla hacia la izquierda como en un cuaderno.<br><br>
-                🛡️ <b>Privacidad y Seguridad:</b> Esta aplicación es <b>100% Offline</b>.
+            <div class="popup-desc" style="font-size: 0.85rem; line-height: 1.45;">
+                <b>1. Estructura de Trabajo:</b><br>
+                • La aplicación imita un cuaderno de matemáticas con cuadrículas independientes por columna.<br>
+                • Puedes hacer clic directo en cualquier casilla de reserva o resultado para seleccionarla.<br><br>
+                
+                <b>2. Modos de Ingreso por Teclado:</b><br>
+                • <b>← Der. a Izq.:</b> El cursor comienza en la unidad (derecha) y avanza automáticamente a la izquierda al digitar cada número.<br>
+                • <b>→ Izq. a Der.:</b> Escritura estándar hacia la derecha.<br>
+                • <b>📒 Casillas:</b> Te permite seleccionar manualmente la casilla que deseas llenar.<br><br>
+
+                <b>3. Modo Opciones:</b><br>
+                • Muestra un signo `?` claro en el sector de respuesta para elegir entre las alternativas disponibles.<br><br>
+
+                <b>4. Consideraciones Pedagógicas:</b><br>
+                • Las reservas superiores ayudan a fijar el hábito del canje en sumas y restas.<br>
+                • Funciona 100% Offline y sin registro de datos.
             </div>
             <button class="popup-next-btn" onclick="closeInfoModal()" style="margin-top: 6px;">Entendido 👍</button>
+        </div>
+    </div>
+
+    <!-- Modal de Ayuda para Resolver Problemas -->
+    <div class="popup-overlay" id="exercise-help-popup" style="align-items: center; padding-bottom: 20px;">
+        <div class="popup-card" style="background: linear-gradient(135deg, #2d3436, #636e72); text-align: left;">
+            <div style="text-align: center;">
+                <div class="popup-emoji-box">
+                    <div class="popup-emoji">💡</div>
+                </div>
+                <div class="popup-title" id="help-modal-title">¿Cómo Resolver?</div>
+            </div>
+            <div class="popup-desc" id="help-modal-content" style="font-size: 0.88rem; line-height: 1.45;">
+                <!-- Se llena dinámicamente según la operación actual -->
+            </div>
+            <button class="popup-next-btn" onclick="closeExerciseHelpModal()" style="margin-top: 6px;">¡Entendido! Vamos a resolver 🚀</button>
         </div>
     </div>
 
@@ -903,7 +961,7 @@
             <button class="btn-retry" onclick="startTest()">Repetir</button>
             <button class="btn-config" onclick="showScreen('main-menu-screen')">Menú Principal</button>
         </div>
-        <div class="version-footer">Matemáticas Divertidas v5.5</div>
+        <div class="version-footer">Matemáticas Divertidas v5.9</div>
     </div>
 </div>
 
@@ -930,12 +988,13 @@
     let currentCorrectAnswer = 0;
     let currentChoices = [];
     let popupTimeout = null;
+    let selectedChoiceDisplay = null; // Almacena el número elegido para mostrarlo en lugar del '?' antes del popup
 
-    // Estado para Cuadrícula por Columnas
-    let maxCols = 1;
+    let gridCols = 1; 
+    let totalCols = 2; 
     let answerBoxValues = [];
     let carryBoxValues = [];
-    let activeTarget = { type: 'answer', index: 0 }; // { type: 'answer' | 'carry', index: number }
+    let activeTarget = { type: 'answer', index: 0 }; 
 
     let audioCtx = null;
     function initAudio() {
@@ -1045,8 +1104,18 @@
 
     function updateDirectionSettingVisibility() {
         const dirSetting = document.getElementById('container-direction-setting');
+        const carrySetting = document.getElementById('container-carry-setting');
+
+        if (currentMode === 'tables') {
+            dirSetting.style.display = 'none';
+            if (carrySetting) carrySetting.style.display = 'none';
+            return;
+        }
+
+        if (carrySetting) carrySetting.style.display = 'block';
+
         if (answerType === 'keypad') {
-            if (currentMode === 'tables' || selectedLevel >= 2) {
+            if (selectedLevel >= 2) {
                 dirSetting.style.display = 'block';
             } else {
                 dirSetting.style.display = 'none';
@@ -1152,6 +1221,48 @@
     function openInfoModal() { playSound('click'); document.getElementById('info-popup').style.display = 'flex'; }
     function closeInfoModal() { playSound('click'); document.getElementById('info-popup').style.display = 'none'; }
 
+    function openExerciseHelpModal() {
+        playSound('click');
+        const titleElem = document.getElementById('help-modal-title');
+        const contentElem = document.getElementById('help-modal-content');
+
+        if (currentMode === 'suma') {
+            titleElem.innerText = '💡 ¿Cómo resolver la Suma?';
+            contentElem.innerHTML = `
+                1. <b>Empieza por la derecha (Unidades):</b> Suma los dos números de la columna derecha.<br>
+                2. <b>Si la suma da 10 o más:</b> Escribe la unidad abajo y anota el 1 en la <b>casilla de reserva (amarilla arriba)</b> de la siguiente columna.<br>
+                3. <b>Avanza hacia la izquierda:</b> Suma la siguiente columna incluyendo la reserva anotada arriba.
+            `;
+        } else if (currentMode === 'resta') {
+            titleElem.innerText = '💡 ¿Cómo resolver la Resta?';
+            contentElem.innerHTML = `
+                1. <b>Empieza por la derecha (Unidades):</b> Resta el número de abajo al número de arriba.<br>
+                2. <b>Si el número de arriba es menor:</b> Necesitas pedir prestado 1 a la columna de la izquierda (anota el canje en la casilla de reserva superior).<br>
+                3. <b>Resta la columna:</b> Resuelve y avanza ordenadamente hacia la izquierda.
+            `;
+        } else if (currentMode === 'multiplicacion' || currentMode === 'tables') {
+            titleElem.innerText = '💡 ¿Cómo resolver la Multiplicación?';
+            contentElem.innerHTML = `
+                1. <b>Multiplica cifra por cifra:</b> Multiplica el número inferior por cada cifra superior comenzando por la unidad.<br>
+                2. <b>Si el resultado supera 9:</b> Escribe la unidad abajo y lleva la decena a la casilla de reserva superior de la izquierda.<br>
+                3. <b>Suma la reserva:</b> Tras multiplicar la siguiente cifra, súmale la reserva correspondiente.
+            `;
+        } else if (currentMode === 'division') {
+            titleElem.innerText = '💡 ¿Cómo resolver la División?';
+            contentElem.innerHTML = `
+                1. <b>Repartición Equitativa:</b> Averigua cuántas veces cabe el divisor en la primera cifra o grupo de cifras del dividendo.<br>
+                2. <b>Multiplica y Compara:</b> Escribe el cociente resultante y verifica que no sobre un número mayor al divisor.
+            `;
+        }
+
+        document.getElementById('exercise-help-popup').style.display = 'flex';
+    }
+
+    function closeExerciseHelpModal() {
+        playSound('click');
+        document.getElementById('exercise-help-popup').style.display = 'none';
+    }
+
     function startTest() {
         playSound('click');
         initAudio();
@@ -1193,7 +1304,7 @@
         document.getElementById('lbl-active-mode').innerText = modeLabels[currentMode];
 
         const dirBadge = document.getElementById('lbl-dir-badge');
-        if (answerType === 'keypad' && (currentMode === 'tables' || selectedLevel >= 2)) {
+        if (answerType === 'keypad' && currentMode !== 'tables' && selectedLevel >= 2) {
             dirBadge.style.display = 'inline-flex';
             if (keypadDirection === 'rtl') {
                 dirBadge.innerHTML = '<span>←</span> Teclado: Der. a Izq.';
@@ -1277,8 +1388,8 @@
         else if (currentMode === 'division') {
             currentOpSymbol = '÷';
             if (selectedLevel === 1) { currentNum2 = Math.floor(Math.random() * 8) + 2; let quotient = Math.floor(Math.random() * 9) + 1; currentNum1 = currentNum2 * quotient; }
-            else if (selectedLevel === 2) { currentNum2 = Math.floor(Math.random() * 8) + 2; let quotient = Math.floor(Math.random() * 90) + 10; currentNum1 = currentNum2 * quotient; }
-            else if (selectedLevel === 3) { currentNum2 = Math.floor(Math.random() * 9) + 2; let quotient = Math.floor(Math.random() * 900) + 100; currentNum1 = currentNum2 * quotient; }
+            else if (selectedLevel === 2) { currentNum2 = Math.floor(Math.random() * 8) + 2; let quotient = Math.floor(Math.random() * 8) + 2; currentNum1 = currentNum2 * quotient; }
+            else if (selectedLevel === 3) { currentNum2 = Math.floor(Math.random() * 9) + 2; let quotient = Math.floor(Math.random() * 90) + 10; currentNum1 = currentNum2 * quotient; }
             currentCorrectAnswer = currentNum1 / currentNum2;
         }
     }
@@ -1291,6 +1402,7 @@
 
     function nextQuestion() {
         currentQuestionNum++;
+        selectedChoiceDisplay = null; // Reiniciar valor elegido para el '?'
 
         if (maxQuestions > 0) {
             document.getElementById('lbl-question-count').innerText = `${currentQuestionNum} / ${maxQuestions}`;
@@ -1304,20 +1416,25 @@
 
         generateNumbersForMode();
 
-        // Determinar max columnas para la cuadrícula
-        maxCols = Math.max(
-            currentNum1.toString().length,
-            currentNum2.toString().length,
-            currentCorrectAnswer.toString().length
-        );
-        if (currentMode === 'tables') maxCols = 2;
+        if (currentMode === 'tables') {
+            answerBoxValues = new Array(4).fill('');
+            activeTarget = { type: 'answer', index: 0 };
+        } else {
+            let baseDigits = selectedLevel;
+            gridCols = Math.max(
+                currentNum1.toString().length,
+                currentNum2.toString().length,
+                baseDigits
+            );
 
-        answerBoxValues = new Array(maxCols).fill('');
-        carryBoxValues = new Array(maxCols).fill('');
+            totalCols = gridCols + 2;
 
-        // En modo Der. a Izq. (rtl), el cursor empieza en la unidad (última columna)
-        let startCol = (keypadDirection === 'rtl' && currentMode !== 'tables') ? (maxCols - 1) : (keypadDirection === 'ltr' ? 0 : (maxCols - 1));
-        activeTarget = { type: 'answer', index: startCol };
+            answerBoxValues = new Array(totalCols).fill('');
+            carryBoxValues = new Array(totalCols).fill('');
+
+            let startCol = (keypadDirection === 'rtl') ? (totalCols - 1) : (keypadDirection === 'ltr' ? 0 : (totalCols - 1));
+            activeTarget = { type: 'answer', index: startCol };
+        }
 
         renderMathGrid();
 
@@ -1329,67 +1446,149 @@
     function renderMathGrid() {
         const displayArea = document.getElementById('math-display-area');
 
+        // MODO OPCIONES (3 o 5 Opciones): Sin cuadros de dígitos, muestra '?' o el valor elegido
+        if (answerType !== 'keypad') {
+            let displayVal = selectedChoiceDisplay !== null ? selectedChoiceDisplay : '?';
+            
+            if (currentMode === 'tables') {
+                displayArea.innerHTML = `
+                    <div class="vertical-math-box" style="text-align: center; padding: 20px; background:#f8f9fa; border-radius:16px; border:2.5px dashed var(--theme-secondary);">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 2.2rem; color:#2f3640;">
+                            <span>${currentNum1} × ${currentNum2} =</span>
+                            <span class="math-digit-box" style="width: auto; min-width: 55px; padding: 0 14px; background: #ffffff; color: ${selectedChoiceDisplay !== null ? 'var(--theme-primary)' : '#b2bec3'};">${displayVal}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Operaciones Verticales con Opciones
+                let num1Str = currentNum1.toString().padStart(totalCols, ' ');
+                let num2Str = currentNum2.toString().padStart(totalCols, ' ');
+
+                let carryRowHtml = '';
+                for (let i = 0; i < totalCols; i++) {
+                    let isActive = (activeTarget.type === 'carry' && activeTarget.index === i);
+                    let val = carryBoxValues[i];
+                    let showBox = showCarryBox && (selectedLevel >= 2);
+                    let content = '';
+                    if (showBox) {
+                        let contentDisplay = val === '' ? (isActive ? '<span class="blinking-empty" style="font-size:0.9rem">_</span>' : '&nbsp;') : `<span class="blinking-number">${val}</span>`;
+                        content = `<div class="carry-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('carry', ${i})">${contentDisplay}</div>`;
+                    }
+                    carryRowHtml += `<div class="math-col">${content}</div>`;
+                }
+
+                let num1RowHtml = '';
+                for (let i = 0; i < totalCols; i++) {
+                    let char = num1Str[i] === ' ' ? '&nbsp;' : num1Str[i];
+                    num1RowHtml += `<div class="math-col">${char}</div>`;
+                }
+
+                let num2RowHtml = '';
+                let opColIndex = totalCols - Math.max(currentNum1.toString().length, currentNum2.toString().length) - 1;
+                if (opColIndex < 0) opColIndex = 0;
+
+                for (let i = 0; i < totalCols; i++) {
+                    let char = '&nbsp;';
+                    if (i === opColIndex) {
+                        char = currentOpSymbol;
+                    } else if (num2Str[i] !== ' ') {
+                        char = num2Str[i];
+                    }
+                    num2RowHtml += `<div class="math-col">${char}</div>`;
+                }
+
+                displayArea.innerHTML = `
+                    <div class="math-column-grid">
+                        <div class="math-grid-row">${carryRowHtml}</div>
+                        <div class="math-grid-row">${num1RowHtml}</div>
+                        <div class="math-grid-row">${num2RowHtml}</div>
+                        <div style="border-bottom: 3.5px solid #2f3640; margin: 4px 0; width: 100%;"></div>
+                        <div class="math-grid-row" style="justify-content: center; padding: 4px 0;">
+                            <span class="math-digit-box" style="width: auto; min-width: 60px; padding: 0 14px; background: #ffffff; color: ${selectedChoiceDisplay !== null ? 'var(--theme-primary)' : '#b2bec3'};">${displayVal}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            return;
+        }
+
+        // MODO TECLADO O CASILLAS
         if (currentMode === 'tables') {
             let ansBoxesHtml = '';
-            for (let i = 0; i < maxCols; i++) {
+            for (let i = 0; i < 4; i++) {
                 let isActive = (activeTarget.type === 'answer' && activeTarget.index === i);
-                let val = answerBoxValues[i];
-                let displayVal = val === '' ? (isActive ? '<span class="blinking-caret">_</span>' : '&nbsp;') : (val + (isActive ? '<span class="blinking-caret">_</span>' : ''));
-                ansBoxesHtml += `<span class="math-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('answer', ${i})">${displayVal}</span>`;
+                let val = answerBoxValues[i] || '';
+                let contentDisplay = '';
+                
+                if (isActive) {
+                    contentDisplay = val === '' ? '<span class="blinking-empty">_</span>' : `<span class="blinking-number">${val}</span>`;
+                } else {
+                    contentDisplay = val === '' ? '&nbsp;' : val;
+                }
+
+                ansBoxesHtml += `<span class="math-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('answer', ${i})">${contentDisplay}</span>`;
             }
+
             displayArea.innerHTML = `
-                <div class="vertical-math-box" style="text-align: center; padding: 16px; background:#f8f9fa; border-radius:16px; border:2.5px dashed var(--theme-secondary);">
-                    <div style="font-size: 2rem; margin-bottom: 10px; color:#2f3640;">${currentNum1} × ${currentNum2} =</div>
-                    <div style="display: inline-flex; gap: 4px;">${ansBoxesHtml}</div>
+                <div class="vertical-math-box" style="text-align: center; padding: 20px; background:#f8f9fa; border-radius:16px; border:2.5px dashed var(--theme-secondary);">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 2.2rem; color:#2f3640;">
+                        <span>${currentNum1} × ${currentNum2} =</span>
+                        <div style="display: inline-flex; gap: 4px;">${ansBoxesHtml}</div>
+                    </div>
                 </div>
             `;
             return;
         }
 
-        let num1Str = currentNum1.toString().padStart(maxCols, ' ');
-        let num2Str = currentNum2.toString().padStart(maxCols, ' ');
-        let opColIndex = maxCols - currentNum2.toString().length - 1;
+        let num1Str = currentNum1.toString().padStart(totalCols, ' ');
+        let num2Str = currentNum2.toString().padStart(totalCols, ' ');
 
-        // Fila de Reserva (Carry)
         let carryRowHtml = '';
-        for (let i = 0; i < maxCols; i++) {
+        for (let i = 0; i < totalCols; i++) {
             let isActive = (activeTarget.type === 'carry' && activeTarget.index === i);
             let val = carryBoxValues[i];
-            let showBox = showCarryBox && (currentMode === 'tables' || selectedLevel >= 2);
+            let showBox = showCarryBox && (selectedLevel >= 2);
             let content = '';
             if (showBox) {
-                let displayVal = val === '' ? (isActive ? '<span class="blinking-caret" style="font-size:0.9rem">_</span>' : '&nbsp;') : (val + (isActive ? '<span class="blinking-caret" style="font-size:0.9rem">_</span>' : ''));
-                content = `<div class="carry-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('carry', ${i})">${displayVal}</div>`;
+                let contentDisplay = val === '' ? (isActive ? '<span class="blinking-empty" style="font-size:0.9rem">_</span>' : '&nbsp;') : `<span class="blinking-number">${val}</span>`;
+                content = `<div class="carry-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('carry', ${i})">${contentDisplay}</div>`;
             }
             carryRowHtml += `<div class="math-col">${content}</div>`;
         }
 
-        // Fila Num 1
         let num1RowHtml = '';
-        for (let i = 0; i < maxCols; i++) {
+        for (let i = 0; i < totalCols; i++) {
             let char = num1Str[i] === ' ' ? '&nbsp;' : num1Str[i];
             num1RowHtml += `<div class="math-col">${char}</div>`;
         }
 
-        // Fila Num 2 y Operador
         let num2RowHtml = '';
-        for (let i = 0; i < maxCols; i++) {
-            let char = '';
+        let opColIndex = totalCols - Math.max(currentNum1.toString().length, currentNum2.toString().length) - 1;
+        if (opColIndex < 0) opColIndex = 0;
+
+        for (let i = 0; i < totalCols; i++) {
+            let char = '&nbsp;';
             if (i === opColIndex) {
                 char = currentOpSymbol;
-            } else {
-                char = num2Str[i] === ' ' ? '&nbsp;' : num2Str[i];
+            } else if (num2Str[i] !== ' ') {
+                char = num2Str[i];
             }
             num2RowHtml += `<div class="math-col">${char}</div>`;
         }
 
-        // Fila de Resultado con Cuadrícula
         let answerRowHtml = '';
-        for (let i = 0; i < maxCols; i++) {
+        for (let i = 0; i < totalCols; i++) {
             let isActive = (activeTarget.type === 'answer' && activeTarget.index === i);
             let val = answerBoxValues[i];
-            let displayVal = val === '' ? (isActive ? '<span class="blinking-caret">_</span>' : '&nbsp;') : (val + (isActive ? '<span class="blinking-caret">_</span>' : ''));
-            answerRowHtml += `<div class="math-col"><span class="math-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('answer', ${i})">${displayVal}</span></div>`;
+            let contentDisplay = '';
+
+            if (isActive) {
+                contentDisplay = val === '' ? '<span class="blinking-empty">_</span>' : `<span class="blinking-number">${val}</span>`;
+            } else {
+                contentDisplay = val === '' ? '&nbsp;' : val;
+            }
+
+            answerRowHtml += `<div class="math-col"><span class="math-digit-box ${isActive ? 'active-box' : ''}" onclick="setActiveTarget('answer', ${i})">${contentDisplay}</span></div>`;
         }
 
         displayArea.innerHTML = `
@@ -1438,14 +1637,28 @@
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
             btn.innerText = val;
-            btn.onclick = () => {
-                playSound('click');
-                document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected-choice'));
-                btn.classList.add('selected-choice');
-                evaluateAnswer(val === currentCorrectAnswer);
-            };
+            btn.onclick = () => selectChoice(val);
             container.appendChild(btn);
         });
+    }
+
+    function selectChoice(val) {
+        playSound('click');
+        document.querySelectorAll('.choice-btn').forEach(b => {
+            if (parseInt(b.innerText) === val) {
+                b.classList.add('selected-choice');
+            } else {
+                b.classList.remove('selected-choice');
+            }
+        });
+
+        // Escribe el número seleccionado en lugar del '?' antes de mostrar el popup
+        selectedChoiceDisplay = val;
+        renderMathGrid();
+
+        setTimeout(() => {
+            evaluateAnswer(val === currentCorrectAnswer);
+        }, 250);
     }
 
     function pressNum(num) {
@@ -1459,14 +1672,19 @@
         if (activeTarget.type === 'answer') {
             answerBoxValues[activeTarget.index] = num;
 
-            // En modo Der. a Izq. (rtl), al escribir se mueve automáticamente hacia la izquierda
-            if (keypadDirection === 'rtl' && currentMode !== 'tables') {
-                if (activeTarget.index > 0) {
-                    activeTarget.index--;
-                }
-            } else if (keypadDirection === 'ltr') {
-                if (activeTarget.index < maxCols - 1) {
+            if (currentMode === 'tables') {
+                if (activeTarget.index < 3) {
                     activeTarget.index++;
+                }
+            } else {
+                if (keypadDirection === 'rtl') {
+                    if (activeTarget.index > 0) {
+                        activeTarget.index--;
+                    }
+                } else if (keypadDirection === 'ltr') {
+                    if (activeTarget.index < totalCols - 1) {
+                        activeTarget.index++;
+                    }
                 }
             }
             renderMathGrid();
@@ -1485,7 +1703,7 @@
 
     function submitKeypadAnswer() {
         playSound('click');
-        let combined = answerBoxValues.join('');
+        let combined = answerBoxValues.join('').trim();
         if (combined === '') return;
         let userVal = parseInt(combined);
         if (isNaN(userVal)) return;
